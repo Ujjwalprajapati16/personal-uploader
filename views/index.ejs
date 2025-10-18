@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Cloudinary Uploader</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f5f6fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      input[type="file"] {
+        display: none;
+      }
+      label {
+        background: #4b7bec;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      select {
+        width: 100%;
+        padding: 10px;
+        margin: 15px 0;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+      }
+      #fileName {
+        margin-top: 10px;
+        color: #666;
+        font-size: 14px;
+      }
+      button {
+        background: #20bf6b;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #26de81;
+      }
+      .uploaded, .deleted, .error {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .uploaded {
+        background: #f0fff4;
+        border: 1px solid #a3e635;
+      }
+      .deleted {
+        background: #fff5f5;
+        border: 1px solid #f87171;
+      }
+      .error {
+        background: #fff8e1;
+        border: 1px solid #facc15;
+      }
+      .new-upload-btn {
+        margin-top: 15px;
+        display: inline-block;
+        text-decoration: none;
+        background: #4b7bec;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+      }
+      .new-upload-btn:hover {
+        background: #3867d6;
+      }
+      form.delete-form {
+        margin-top: 25px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+      }
+      .delete-btn {
+        background: #eb3b5a;
+        margin-top: 10px;
+      }
+      .delete-btn:hover {
+        background: #fc5c65;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Personal Cloudinary Uploader 🌩️</h2>
+
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="fileInput">Select File</label>
+        <input type="file" id="fileInput" name="file" required />
+        <p id="fileName">No file selected</p>
+
+        <select name="folder" required>
+          <option value="personal_uploads">Personal Uploads</option>
+          <option value="documents">Documents</option>
+          <option value="images">Images</option>
+          <option value="videos">Videos</option>
+        </select>
+
+        <button type="submit">Upload</button>
+      </form>
+
+      <% if (uploaded) { %>
+      <div class="uploaded">
+        <strong>✅ Uploaded:</strong> <%= uploaded.name %><br />
+        <a href="<%= uploaded.url %>" target="_blank"><%= uploaded.url %></a>
+      </div>
+      <a class="new-upload-btn" href="/">New Upload</a>
+      <% } %>
+
+      <% if (deleted) { %>
+      <div class="deleted">
+        <strong>🗑️ Deleted File:</strong><br />
+        <a href="<%= deleted %>" target="_blank"><%= deleted %></a>
+      </div>
+      <% } %>
+
+      <% if (error) { %>
+      <div class="error"><%= error %></div>
+      <% } %>
+
+      <!-- Delete File Form -->
+      <form class="delete-form" action="/delete" method="post">
+        <h3>Delete File from Cloudinary</h3>
+        <input type="text" name="fileUrl" placeholder="Paste Cloudinary file URL" required />
+        <button type="submit" class="delete-btn">Delete File</button>
+      </form>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const fileName = document.getElementById("fileName");
+      fileInput.addEventListener("change", () => {
+        fileName.textContent = fileInput.files.length
+          ? fileInput.files[0].name
+          : "No file selected";
+      });
+    </script>
+  </body>
+</html>
